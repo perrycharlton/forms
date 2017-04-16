@@ -1,0 +1,21 @@
+{% macro forms(label, type) -%}
+
+{% set pass_msg = 'Password must contain at least 6 characters, including UPPER/lowercase and numbers.' %}
+{% set user_msg = 'Password must be between 6 characters and 20 characters' %}
+{% set pass_ptn = "(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" %}
+{% set user_ptn = "\w+" %}
+
+
+{% if type == 'password' %}
+{% set title = pass_msg %} {% set pattern= pass_ptn %}
+{% elif type == 'username' %}
+{% set title = user_msg %} {% set pattern= user_ptn %}
+{% endif %}
+
+<div class="flex-row">
+    <div class="flex-column"><label>{{ label | capitalize }}</label></div>
+    <div class="flex-column">
+        <input name="{{ label }}" id="id_{{ label }}" name="{{ label }}" type="{{ type }}" required>
+    </div>
+</div>
+{%- endmacro %}

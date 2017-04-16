@@ -1,0 +1,32 @@
+{% from "form_helper.html" import forms %}
+
+<div class="container">
+    <h1>Password Verification</h1>
+    <form id="myForm" method="POST" action="login">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {{ forms('username','text') }}
+        {{ forms('password','password') }}
+         <div class="flex-row">
+                <label><input type="submit" value="Submit"></label>
+            </div>
+    </form>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('user.static', filename='css/signin.css') }}">
+
+<script type="text/javascript">
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+      // JavaScript form validation
+      console.log('here is begins');
+
+      var checkPassword = function (str) {
+          var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+          return re.test(str)
+      };
+
+
+      re = /^\w+$/;
+  }
+</script>

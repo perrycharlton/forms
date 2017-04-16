@@ -1,0 +1,131 @@
+{% from "users/form_helper.html" import forms %}
+
+<div class="container">
+    <h1>Password Verification</h1>
+    <form id="myForm" method="POST" action="login">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {{ forms('username','text') }}
+        {{ forms('password','password') }}
+         {{ forms('confirm','password') }}
+         <div class="flex-row">
+                <label><input type="submit" value="Submit"></label>
+            </div>
+    </form>
+
+
+    <!--<form id="myForm" method="POST" action="login">-->
+        <!--<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>-->
+        <!--<div class="flex-row">-->
+            <!--<div class="flex-row">-->
+                <!--<p class="p-2">Username: <input id="field_username"-->
+                                    <!--title="Username must not be blank and contain only letters, numbers and underscores."-->
+                                    <!--type="text" required pattern="\w+" name="username"></p>-->
+            <!--</div>-->
+            <!--<div class="flex-row">-->
+                <!--<label>Password: <input id="field_pwd1"-->
+                                    <!--title="Password must contain at least 6 characters, including UPPER/lowercase and numbers."-->
+                                    <!--type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" name="pwd1">-->
+                <!--</label>-->
+
+            <!--</div>-->
+            <!--<div class="flex-row">-->
+                <!--<label>Confirm Password: <input id="field_pwd2" title="Please enter the same Password as above."-->
+                                            <!--type="password"-->
+                                                <!--required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" name="pwd2"></label>-->
+            <!--</div>-->
+            <!--<div class="flex-row">-->
+                <!--<label><input type="submit" value="Submit"></label>-->
+            <!--</div>-->
+    <!--</form>-->
+</div>
+
+<link rel="stylesheet" href="{{ url_for('user.static', filename='css/signin.css') }}">
+
+<script type="text/javascript">
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    // JavaScript form validation
+    console.log('here is begins');
+
+    var checkPassword = function (str) {
+      var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+      return re.test(str)
+    };
+
+    var checkForm = function (e) {
+      if (this.username.value == '') {
+        alert('Error: Username cannot be blank!');
+        this.username.focus();
+        e.preventDefault(); // equivalent to return false
+        return
+      }
+      re = /^\w+$/;
+
+      if (!re.test(this.username.value)) {
+        alert('Error: Username must contain only letters, numbers and underscores!');
+        this.username.focus();
+        e.preventDefault();
+        return
+      }
+      if (this.password.value != '' && this.confirm.value == this.pwd2.value) {
+        if (!checkPassword(this.pwd1.value)) {
+          alert('The password you have entered is not valid!');
+          this.confirm.focus();
+          e.preventDefault();
+          return
+        }
+      } else {
+        alert('Error: Please check that you\'ve entered and confirmed your password!');
+        this.confirm.focus();
+        e.preventDefault();
+        return
+      }
+      alert('Both username and password are VALID!')
+    };
+
+    var myForm = document.getElementById('myForm');
+    myForm.addEventListener('submit', checkForm, true);
+
+    // HTML5 form validation
+
+    var supports_input_validity = function () {
+      var i = document.createElement('input');
+      return 'setCustomValidity' in i
+    };
+
+    if (supports_input_validity()) {
+      var usernameInput = document.getElementById('username');
+      usernameInput.setCustomValidity(usernameInput.title);
+
+      var pwd1Input = document.getElementById('password');
+      pwd1Input.setCustomValidity(pwd1Input.title);
+
+      var pwd2Input = document.getElementById('confirm');
+
+      // input key handlers
+
+      usernameInput.addEventListener('keyup', function () {
+        usernameInput.setCustomValidity(this.validity.patternMismatch ? usernameInput.title : '')
+      }, false);
+
+      pwd1Input.addEventListener('keyup', function () {
+        this.setCustomValidity(this.validity.patternMismatch ? pwd1Input.title : '');
+        if (this.checkValidity()) {
+          pwd2Input.pattern = this.value;
+          pwd2Input.setCustomValidity(pwd2Input.title)
+        } else {
+          pwd2Input.pattern = this.pattern;
+          pwd2Input.setCustomValidity('')
+        }
+      }, false);
+
+      pwd2Input.addEventListener('keyup', function () {
+        this.setCustomValidity(this.validity.patternMismatch ? pwd2Input.title : '')
+      }, false)
+
+    }
+
+  }, false)
+
+</script>

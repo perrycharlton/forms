@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "users/_formhelpers.html" import render_field %}
+{% block content %}
+
+{% block title %}
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+    <link rel="stylesheet" href="{{ url_for('user.static', filename='css/signin.css')}}">
+{% endblock %}
+
+<div class="container">
+    <form class="form-signin" method="POST" action="/user/signup">
+        <h2 class="form-signin-heading">Please register</h2>
+         {{ form.csrf_token }}
+        {% for n in form if n.id != 'csrf_token' %}
+            {{ render_field(n) }}
+        {% endfor %}
+    </form>
+</div>
+
+
+{% endblock %}

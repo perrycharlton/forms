@@ -1,0 +1,17 @@
+
+{% from "form_helper.html" import forms %}
+
+<div class="container">
+    <h1>Password Verification</h1>
+    <form id="myForm" method="POST" action="login">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {{ forms('first', 'text') }}
+        {{ forms('last', 'text') }}
+        {{ forms('username','text') }}
+        {{ forms('password','password') }}
+         {{ forms('confirm','password') }}
+         <div class="flex-row">
+                <label><input type="submit" value="Submit"></label>
+            </div>
+    </form>
+</div>
