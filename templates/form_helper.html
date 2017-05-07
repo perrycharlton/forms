@@ -1,10 +1,13 @@
 {% macro forms(label, type) -%}
 
 
-<div class="flex-row">
-    <div class="flex-column"><label>{{ label | capitalize }}</label></div>
-    <div class="flex-column">
-        <input name="{{ label }}" id="id_{{ label }}" name="{{ label }}" type="{{ type }}" required>
+    <div class="form-group row">
+
+    <div class="col-1">
+        <label for="id_{{ label }}" class="col-form-label">{{ label | capitalize }}</label>
     </div>
-</div>
+        <div class="col-8">
+        <input name="{{ label }}" id="id_{{ label }}" type="{{ type }}" required>
+        </div>
+    </div>
 {%- endmacro %}

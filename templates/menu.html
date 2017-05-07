@@ -1,20 +1,30 @@
-<div id="main-menu" class="d-flex justify-content-start menu-transparency">
-    <div data-link="welcome" class="p-2">
-        <span class="fa fa-home fa-2x white"></span>
+<div class="row toprow">
+    <div id="home" data-link="home" class="col-3"><i class="fa fa-home fa-3x" aria-hidden="true"></i></div>
+    <div class="col-6"><h1 class="text-center">Welcome to my site</h1></div>
+    <div class="col-1">
+        <button id="login_btn" data-link="login" class="btn btn-primary align-content-end">Login</button>
     </div>
-{#    {% for menu in data["menu"] %}#}
-{#    <div class="p-2 invisible hidden" data-link="{{ menu.link }}">#}
-{#        <a class="nav-link text-center" href="#">{{ menu.title | capitalize }}</a>#}
-{#    </div>#}
-{#    {% endfor %}#}
-    <div class="ml-auto p-2 invisible hidden">
-        <div id="logged_in" class="text-center white nav-link">Please login to continue</div>
+    <div class="col-1">
+        <button id="signup_btn" data-link="signup" class="btn btn-info">sign up</button>
     </div>
-    <div class="ml-auto p-1 invisible hidden">
-        <img src="" alt="" id="user_img" class=" rounded-circle" width="40" height="40"/>
-    </div>
-    <div class="ml-auto p-2" data-link="user">
-        <button class="btn btn-primary text-center nav-link">Login</button>
-    </div>
+    <div class="col-1"></div>
 </div>
+<script>
+jQuery(document).ready(function ($) {
 
+    $('#home, #login_btn, #signup_btn').click(function (e) {
+        var link = $(this).data('link');
+        main.get_data(link).done(function (result) {
+{#            if (result.body) {#}
+{#                $('body').html(result.body);#}
+{#            }#}
+            if (result.content) {
+                $('#content').html(result.content);
+            }
+            if (result.menu) {
+                $('#top_menu').html(result.menu)
+            }
+        })
+    });
+});
+</script>

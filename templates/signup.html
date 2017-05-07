@@ -1,17 +1,94 @@
-
 {% from "form_helper.html" import forms %}
 
-<div class="container">
-    <h1>Password Verification</h1>
-    <form id="myForm" method="POST" action="login">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        {{ forms('first', 'text') }}
-        {{ forms('last', 'text') }}
-        {{ forms('username','text') }}
-        {{ forms('password','password') }}
-         {{ forms('confirm','password') }}
-         <div class="flex-row">
-                <label><input type="submit" value="Submit"></label>
-            </div>
-    </form>
-</div>
+
+<h1>Registration Verification</h1>
+<form id="myForm" method="post" action="login">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    {{ forms('first', 'text') }}
+    {{ forms('last', 'text') }}
+    {{ forms('username','text') }}
+    {{ forms('email', 'email') }}
+    {{ forms('password','password') }}
+    {{ forms('confirm','password') }}
+    <button id="register" type="submit" class="btn btn-danger">Submit</button>
+</form>
+<div id="signup_message" class="message">{{ html }}</div>
+<script>
+
+    $().ready(function ($) {
+        console.log('tesl');
+
+        var csrf = $("input[name='csrf_token']").val(),
+            username = $('#id_username');
+
+        $("#myForm").validate({
+            rules: {
+                first: "required",
+                last: "required",
+                username: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 40
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 8,
+                    pwcheck: true
+                },
+                confirm: {
+                    required: true,
+                    equalTo: "#id_password"
+                }
+            },
+            messages: {
+                username: {
+                    required: "Enter your username",
+                    minlength: "At least 6 characters are necessary",
+                    maxlength: "Not more than 40 characters",
+                    remote: "The name {0} is already in use"
+                },
+                password: {
+                    pwcheck: "Please ensure you have at least 1 Capital letter and 1 number!"
+                }
+            }
+        });
+
+        $("#register").click(function (e) {
+            var form = $("#myForm");
+            e.preventDefault();
+            if (form.valid()) {
+                main.post_data("auth/signup", form.serialize())
+                    .done(function (result) {
+                        if (result.content) {
+                            $('#content').html(result.content);
+                        }
+                        if (result.message) {
+                            $('#signup_message').html(result.message)
+                        }
+                    });
+                {#                form.submit();#}
+            }
+            return form.valid();
+        })
+
+    });
+
+    $.validator.addMethod("pwcheck", function (value) {
+        return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
+            && /[a-z]/.test(value) // has a lowercase letter
+            && /\d/.test(value) // has a digit
+    });
+
+    $('#id_username').focus(function () {
+        var first = $("#id_first").val(),
+            last = $("#id_last").val();
+        if (first && last && !this.value) {
+            this.value = first + "." + last;
+        }
+    })
+
+</script>

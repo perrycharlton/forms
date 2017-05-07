@@ -1,0 +1,86 @@
+<p>This page is used to upload multi-choice tests. The tests have to be text files only?<br>For example:
+<span class="text-danger">201: Health and safety in building services engineering</span></p>
+<p>Please unsure that in the first line you have the unit number and title with a semi-colon between.</p>
+<p>All question numbers must be at the beginning of the line and have a decimal after the number.</p>
+<p>All options must be a to d with a closing bracket after i.e. <span class="text-danger">a), b)</span></p>
+<p></p>
+
+<form id="upload-file" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <label for="up-file">Select file</label>
+        <input name="file" type="file" class="form-control-file" id="up-file" aria-describedby="fileHelp">
+        <small id="fileHelp" class="form-text text-muted"></small>
+    </div>
+    <button id="upload-file-btn" type="button" class="btn btn-primary">Upload</button>
+</form>
+<div id="quiz_container"></div>
+<script>
+    jQuery(document).ready(function ($) {
+        console.log("welcome to quiz page");
+        $('#up-file').on("change", function () {
+            $('#fileHelp').removeClass();
+            var myfile = $(this).val();
+            var ext = myfile.split('.').pop();
+            if (ext === "txt") {
+                export_quiz();
+                $('#fileHelp').html(myfile + " has been selected").addClass("text-success");
+            } else {
+                $('#fileHelp').html("Please select only a file that ens with '.txt'!!").addClass("text-danger");
+                $(this).val('')
+            }
+        })
+
+
+    });
+
+    function export_quiz() {
+        $('#upload-file').on('click', '#upload-file-btn', function () {
+            var form_data = new FormData($('#upload-file')[0]);
+            console.log(form_data);
+            {#            var csrf_token = $('input[name=csrf_token]').val();#}
+            $.ajax({
+                type: 'POST',
+                url: '/quiz/upload',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                async: false,
+                success: function (result) {
+                    $('#fileHelp').html('Success!').addClass("text-success");
+                    if (result.questions) {
+                        var quiz_html = quiz.update_questions(result);
+
+                        $('#quiz_container').html(quiz_html)
+                            .on("click", "#quiz_save_btn", function () {
+                                quiz.save_quiz();
+                            });
+                    }
+                    if (result.sub_content){
+                        var quiz_html = result.sub_content;
+
+                        $('#quiz_container').html(quiz_html)
+                            .on("click", "#quiz_save_btn", function () {
+                                quiz.save_quiz();
+                            });
+                    }
+                    if (result.message){
+                        $('#fileHelp').html(result.message).removeClass().addClass("text-danger");
+                    }
+
+                },
+
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+                        xhr.setRequestHeader('X-CSRFToken', csrf_token)
+                    }
+                }
+            })
+
+        });
+    }
+
+
+</script>
+

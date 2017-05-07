@@ -1,0 +1,117 @@
+<h2>Hello from the Quiz Page</h2>
+
+<p>This page loads first before all other pages</p>
+
+<div class="btn-group">
+
+    <button type="button" class="btn btn-danger dropdown-toggle" id="unit_selector"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false">
+        Select Unit
+    </button>
+    <div class="dropdown-menu">
+        {% for u in units %}
+            <a class="dropdown-item" data-link="{{ u }}" href="#" {{ loop.index }}>{{ u }}</a>
+        {% endfor %}
+    </div>
+
+</div>
+
+
+<div class="container">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div id="test_text">
+
+    </div>
+</div>
+<script>
+    csrf_token = "";
+
+    jQuery(document).ready(function ($) {
+        console.log("welcome to quiz page");
+        $('.dropdown-item').on("click", function () {
+            console.log($(this).data('link'));
+        });
+        export_quiz();
+
+        $('#text_selector').on('click', function () {
+            {#            var html = "";#}
+            main.get_data("quiz/text").done(function (result) {
+
+                console.log(result);
+                localStorage.setItem('quiz', JSON.stringify(result));
+                var quiz_html = quiz.make_page(result.questions);
+                {#                quiz_html += '<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>';#}
+                quiz_html += '<div class="quiz_quest">' +
+                    '<input type="button" id="quiz_btn"  class="btn btn-danger" value="Submit">' +
+                    '</div><div id="error_msg"></div>';
+                $('#test_text').html(quiz_html);
+                import_quiz();
+
+            })
+        })
+    });
+
+    function import_quiz() {
+        $('#test_text').on('click', '#quiz_btn', function () {
+            var question = JSON.parse(localStorage.getItem("quiz"));
+            var t_qu = question['questions'].length;
+            var t_selected = $("input.quiz_input:checked").length;
+            console.log(t_qu, t_selected);
+            {#            if(t_qu != t_selected){#}
+            $('#error_msg').html('please select all options');
+            {#            } else{#}
+
+
+            $("input.quiz_input").each(function () {
+                var opt = $(this).val();
+                var no = $(this).data('number');
+                if ($(this).prop('selected')) {
+                    question['questions'][no]['options'][opt]['score'] = "1";
+                } else {
+                    question['questions'][no]['options'][opt]['score'] = "0";
+                }
+
+            });
+            var csrf_token = $('input[name=csrf_token]').val();
+            var jsonfy_questions = JSON.stringify(question);
+            console.log(jsonfy_questions);
+
+            main.post_json_data("quiz/update", jsonfy_questions, csrf).done(function (response) {
+                console.log(response)
+            });
+            console.log(question)
+        });
+
+
+    }
+    function export_quiz() {
+        $('#upload-file').on('click', '#upload-file-btn', function () {
+            var form_data = new FormData($('#upload-file')[0]);
+            console.log(form_data);
+            var csrf_token = $('input[name=csrf_token]').val();
+            $.ajax({
+                type: 'POST',
+                url: '/quiz/upload',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                async: false,
+                success: function (data) {
+                    console.log('Success!');
+                },
+
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+                        xhr.setRequestHeader('X-CSRFToken', csrf_token)
+                    }
+                }
+            })
+
+        });
+    }
+
+</script>
+

@@ -1,98 +1,124 @@
 /**
- * Created by perry on 06/04/17.
+ * Created by perry on 12/03/17.
  */
-// setup csrf token for all ajax calls
-var csrftoken = $('meta[name=csrf-token]').attr('content');
+var csrf_token = "{{ csrf_token() }}";
+
 $.ajaxSetup({
-    beforeSend: function(xhr, settings) {
+    beforeSend: function (xhr, settings) {
         if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
-         xhr.setRequestHeader("X-CSRFToken", csrftoken);
-      }
+            xhr.setRequestHeader('X-CSRFToken', csrf_token)
+        }
     }
 });
 
-$(document).ready(function(){
-   // initial check to see if user is logged in or not
-   updateAuthStatus();
+
+var main = (function () {
+
+    // Function to the css rule
+    var checkSize = function (elem) {
+        if ($(elem).width() >= 980) {
+            console.log($(elem).width());
+            return true
+        }
+    };
+
+    var getHeight = function (item) {
+        var maxHeight = $(item).map(function () {
+            console.log($(this).height());
+            return $(this).height()
+        }).get();
+        $(item).height(Math.max.apply(null, maxHeight))
+    };
+
+    var first_upper = function (str) {
+        return (str + '').toLowerCase().replace(/\b[a-z]/g, function ($1) {
+            return $1.toUpperCase()
+        })
+    };
+
+    var get_data = function (myFile) {
+        return $.get('/' + myFile)
+    };
+
+    var post_data = function (myFile, data, csrf_token) {
+        console.log(myFile, data);
+        return $.ajax({
+            type: "POST",
+            url:'/' + myFile,
+            data: data,
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+                    xhr.setRequestHeader('X-CSRFToken', csrf_token)
+                }
+            }
+        })
+
+    };
+    var post_json_data = function (myFile, data, csrf_token) {
+        console.log(myFile, data);
+        return $.ajax({
+            type: "POST",
+            url:'/' + myFile,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: data,
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+                    xhr.setRequestHeader('X-CSRFToken', csrf_token)
+                }
+            }
+        })
+
+    };
+
+
+    var dynamicSort = function (property) {
+        var sortOrder = 1;
+        if (property[0] === "-") {
+            sortOrder = -1;
+            property = property.substr(1);
+        }
+        return function (a, b) {
+            var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+            return result * sortOrder;
+        }
+    };
+
+
+    var shuffle = function (array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    };
+
+
+    return {
+        getHeight: getHeight,
+        checkSize: checkSize,
+        first_upper: first_upper,
+        get_data: get_data,
+        post_data: post_data,
+        dynamicSort: dynamicSort,
+        shuffle: shuffle,
+        post_json_data: post_json_data
+    }
+
+})();
 
 
 
-   // setup logged in view
-   $('#logged-in-view button').click(function(){
-      logout()
-         .done(function(response){
-            showLoggedout()
-         }).fail(function(response){
-            showLoggedIn();
-         });
-   });
 
-   // setup signup view
-   $('#signup-view #signup-form').submit(function(e) {
-      e.preventDefault();
-      var form = $(this);
-      var signupData = extractFormInput(form);
 
-      signup(signupData)
-         .done(function(response){
-            alert('You just created a new user');
-            form.trigger('reset');
-            updateAuthStatus();
-         }).fail(function(response){
-            alert('Something went wrong');
-         });
-
-   });
-});
-
-// helpers
-function updateAuth() {
-   verifyAuth()
-      .done(function(response){
-         showLoggedIn(response.data.user_name)
-      }).fail(function(response){
-         showLoggedout()
-      });
-}
-function extractFormInput(form) {
-   var inputs = form.serializeArray();
-   var data = {};
-   $.each(inputs, function(index, input) {
-      data[input.name] = input.value;
-   });
-   return data;
-}
-
-function showLoggedIn(username) {
-   // show logged in view and show username
-   $("#logged-in-view span").text(username);
-   $("#logged-out-view").addClass('hidden');
-   $("#logged-in-view").removeClass('hidden');
-}
-
-function showLoggedout() {
-   // show logged out view
-   $("#logged-out-view").removeClass('hidden');
-   $("#logged-in-view").addClass('hidden');
-}
-
-// API calls
-function verifyAuth(callback) {
-   var url = '/api/auth/verify_auth';
-   return $.get(url);
-}
-
-function login(loginData){
-   var url = '/api/auth/login';
-   return $.post(url, loginData);
-}
-
-function logout() {
-   var url = '/api/auth/logout';
-   return $.post(url);
-}
-
-function signup(signupData) {
-   var url = '/api/auth/signup';
-   return $.post(url, signupData);
-}

@@ -3,20 +3,14 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-   {% block extn_styles %}
-       <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-   {% endblock %}
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    {% include 'extn_links.html' %}
+    {% block extn_styles %}{% endblock %}
 
     {% block styles %}
-        <link rel="stylesheet" href="{{ url_for ('static', filename='css/bootstrap.min.css') }}"/>
-        <link rel="stylesheet" href="{{ url_for ('static', filename='css/style.css') }}"/>
     {% endblock %}
 
-
-
-
-    <link rel="shortcut icon" type="image/x-icon" href="/static/images/tfte-logo.png"/>
+   <link rel="shortcut icon" type="image/x-icon" href="/static/images/tfte-logo.png"/>
 
 
 </head>
@@ -31,16 +25,10 @@
 
 {% endblock %}
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-{% block extn_scripts %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-{% endblock %}
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 {% block scripts %}
-    <script src="{{ url_for ('static', filename='js/tether.min.js') }}"></script>
-    <script src="{{ url_for ('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for ('static', filename='js/main.js') }}"></script>
+
+    <script src="{{ url_for ('static', filename='desktop/js/main.js') }}"></script>
 {% endblock %}
 </body>
 </html>

@@ -1,24 +1,27 @@
-from flask import Blueprint, render_template, redirect, url_for, jsonify, request
-from common.data import json_file
+from flask import render_template, jsonify
+
+from common.baconipsum import get_bacon
 
 
-frontend = Blueprint('frontend', __name__)
+def get_auth(start):
+    content = render_template(start + '.html')
+    return jsonify({"content": content})
 
 
-@frontend.route('/')
-def index():
-    data = json_file('welcome.json')
-    return render_template('index.html', data=data)
+def get_index():
+    bacon = get_bacon(3)
+    return render_template("index.html", menu='menu.html', sub_content='bacon.html', data=bacon)
 
 
-@frontend.route('/<path:path>', methods=["GET", "POST"])
-def login(path):
-    if request.method == "GET":
-        if path == 'login':
-            # login_page = redirect(url_for('user.login'))
-            return jsonify({'page': render_template('login.html')})
-        elif path == 'signup':
-            return jsonify({'page': render_template('signup.html')})
+def get_home():
+    bacon = get_bacon(3)
 
-    elif request.method == "POST":
-        return redirect(url_for('user.login'), code=307)
+    return jsonify({"content": render_template('bacon.html', data=bacon)})
+
+
+def get_logout():
+    bacon = get_bacon(3)
+
+    menu = render_template('menu.html')
+    content = render_template('bacon.html', data=bacon)
+    return jsonify({"content": content, 'menu': menu})

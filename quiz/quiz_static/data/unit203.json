@@ -1,0 +1,159 @@
+{
+  "title": "Principles of electrical science ",
+  "unit": "203",
+  "questions": [
+    {
+      "no": 1,
+      "question": "Which one of the following is the measurement of electrons?",
+      "options": [
+        "charge",
+        "atomic mass",
+        "potential",
+        "resistivity"
+      ],
+      "scores": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "lo": "1"
+    },
+    {
+      "no": 2,
+      "question": "Which one of the following describes the effect used by a cell or battery? ",
+      "options": [
+        "Thermal",
+        "Chemical",
+        "Induction",
+        "Magnetic"
+      ],
+      "scores": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "lo": "1"
+    },
+    {
+      "no": 3,
+      "question": "When the current passing through a conductor is increased, the conductor temperature will:",
+      "options": [
+        "decrease",
+        "fluctuate",
+        "increase",
+        "stay the same"
+      ],
+      "scores": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "lo": "1"
+    },
+    {
+      "no": 4,
+      "question": "The SI base unit for mass is the",
+      "options": [
+        "kilo-gram",
+        "centi-gram",
+        "milli-gram",
+        "micro-gram"
+      ],
+      "scores": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "lo": "1"
+    },
+    {
+      "no": 5,
+      "question": "Which one of the following is measured in ohms?",
+      "options": [
+        "Current.",
+        "Potential.",
+        "Statics.",
+        "Resistance."
+      ],
+      "scores": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "lo": "1"
+    },
+    {
+      "no": 6,
+      "question": "Which one of the following is measured in Henrys?",
+      "options": [
+        "Inductance.",
+        "Capacitance.",
+        "Reactance.",
+        "Impedance."
+      ],
+      "scores": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "lo": "1"
+    },
+    {
+      "no": 7,
+      "question": "Which one of the following is the unit of measurement for potential difference?",
+      "options": [
+        "Ampere.",
+        "Ohm.",
+        "Volt.",
+        "Joule."
+      ],
+      "scores": [
+        1,
+        0,
+        1,
+        0
+      ],
+      "lo": "1"
+    },
+    {
+      "no": 8,
+      "question": "A method used to determine power uses the following formula: P=V×I×cosθ. Which one of the following would be the formula transposed correctly to determine I?",
+      "options": [
+        "I=P×V×cosθ",
+        "I=V×cosθ/P",
+        "I=P/V×cosθ",
+        "I=cosθ/P×V "
+      ],
+      "scores": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "lo": "1"
+    },
+    {
+      "no": 9,
+      "question": "What is the length of a 1.5 mm2 copper conductor if it has a measured resistance of 0.22 Ω at 20 0C, using the formula shown? The resistivity of copper (P) is 0.0172 micro-ohms-metre. R=PL/A",
+      "options": [
+        "19.2 m",
+        "36.6 m",
+        "82.3 m",
+        "94.4 m"
+      ],
+      "scores": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "lo": "2"
+    }
+  ]
+}

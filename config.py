@@ -1,6 +1,7 @@
 import os
 from pymongo import MongoClient
 
+
 INSTANCE_FOLDER_PATH = os.path.join('/tmp', 'instance')
 
 
@@ -13,19 +14,28 @@ class BaseConfig(object):
     DEBUG = False
     TESTING = False
 
-    ADMINS = ['youremail@yourdomain.com']
+    ADMINS = ['perry@perrycharlton.com']
 
     # http://flask.pocoo.org/docs/quickstart/#sessions
     SECRET_KEY = os.urandom(24)
 
+    MONGOD_DATABASE_URI = MongoClient('192.168.1.63:27017')
+
     DB_NAME = 'Users'
 
-    DATABASE = MongoClient()[DB_NAME]
+    DATABASE = MONGOD_DATABASE_URI[DB_NAME]
 
     USERS_COLLECTION = DATABASE.users
 
-    EXPLAIN_TEMPLATE_LOADING = True
+    EXPLAIN_TEMPLATE_LOADING = False
 
+
+
+    # DEFAULT_MAIL_SENDER = 'perry@perrycharlton.com'
+    # MAIL_SERVER = 'smtp.gmail.com'
+    # MAIL_PORT = 465
+    # MAIL_USE_TLS = False
+    # MAIL_USE_SSL = True
 
 class DefaultConfig(BaseConfig):
     # Statement for enabling the development environment

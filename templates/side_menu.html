@@ -1,0 +1,12 @@
+<ul class="nav flex-column side_menu" id="side_menu">
+    {% for menu in menus.label %}
+    <li class="nav-item" data-link="{{ menus.link }}/{{ menu }}">
+        <a class="nav-link active" href="#">{{ menu | capitalize }}</a>
+    </li>
+   {% endfor %}
+</ul>
+
+{% if menus.js_file %}
+{#{{ menus.js_file }}#}
+<script src="{{ url_for ('static', filename='desktop/js/quiz.js') }}"></script>
+{% endif %}

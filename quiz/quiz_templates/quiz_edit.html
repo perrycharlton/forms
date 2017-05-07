@@ -1,0 +1,152 @@
+<div id="test_title">{{ data.title }}</div>
+<div id="unit">{{ data.unit }}</div>
+
+{% for question in data.questions %}
+    {% set outerloop = loop.index %}
+    <div class='quiz_quest' data-q_no='{{ question.question_id }}' data-question='{{ question.question }}'>
+        Q {{ loop.index }}: {{ question.question }}
+        <label for="up-file{{ loop.index }}" class="col-3">Add Image</label>
+        <input name="image"
+               data-img="{{ question.question_id }}"
+               type="file"
+               style="display: none;"
+               accept="image/*"
+               class="img-question"
+               id="up-file{{ loop.index }}">
+        <img src="" id="q_img{{ question.question_id }}" alt="" class="invisible img-option" img-thumbnail>
+    </div>
+    <label for="lo{{ loop.index }}">LO:</label>
+    <input name="lo"
+           type="text"
+           value="{{ question['LO'] }}"
+           id="lo{{ loop.index }}"
+           class="quiz-edit-input col-sm-1 input-group-sm">
+
+    {% for opt in question['options'] %}
+        <div class="form-check row">
+            <label class="form-check-label radio inline col-6">
+                <input type="radio"
+                       class="option_{{ question.question_id }}"
+                       data-number="{{ opt.option_id }}"
+                        {#                       data-question="{{ opt.option }}"#}
+                       name="radio{{ question.question_id }}"
+                       value="{{ loop.index }}">
+                {{ opt.option }}
+            </label>
+
+            <label for="up-file{{ opt.option_id }}" class="col-3">Add Image</label>
+            <input name="image"
+                   type="file"
+                   style="display: none;"
+                   accept="image/*"
+                   id="up-file{{ opt.option_id }}"
+                   data-img="{{ opt.option_id }}"
+                   class="img-question">
+
+            <img src="" id="q_img{{ opt.option_id }}" alt="" class="invisible img-option img-question">
+        </div>
+    {% endfor %}
+{% endfor %}
+<div>
+    <input type="button" id="quiz_save_btn" class="btn btn-danger" value="Submit">
+</div>
+
+<script>
+    jQuery(document).ready(function ($) {
+        console.log("image");
+        $(".img-question").change(function () {
+            readURL(this);
+        });
+        $('#quiz_save_btn').on('click', function () {
+            update_quiz()
+        })
+
+    });
+    function readURL(input) {
+        var loop = $(input).data('img');
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#q_img' + loop).attr('src', e.target.result).removeClass('invisible');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function update_quiz() {
+        var r_selected = $('.quiz_quest');
+        var unit = $("#unit").html();
+        var questions = {};
+        var images = [];
+        var question = [];
+
+        r_selected.each(function () {
+            var quest_no = $(this).data('q_no');
+            var image = $('#q_img' + quest_no).attr("src");
+            var quest = $(this).data('question');
+            var options = [];
+            {#            var option_imgs = [];#}
+            // This finds the options and which is correct
+            $(".option_" + quest_no).each(function () {
+                var num = $(this).data('number');
+                var img_data = $('#q_img' + num).attr("src");
+                var score = $(this).prop('selected') ? 1 : 0;
+                var option = $(this).data('question');
+                {#                var opt_image = img_data.length > 3 ? img_data : "";#}
+                if (img_data.length > 0) {
+                    images.push({
+                        "image": img_data,
+                        "image_no": num
+                    });
+                }
+
+                options.push({
+                    "option": option,
+                    "score": score,
+                    "image_no": num
+                });
+
+            });
+            question.push({
+                "question": quest,
+                "question_no": quest_no,
+                "option": options
+            });
+            if (image.length > 0) {
+                images.push({
+                    "image": image,
+                    "image_no": quest_no
+                });
+            }
+
+        });
+        questions['questions'] = question;
+        questions['images'] = images;
+        questions['unit'] = $('#unit').html();
+        questions['user'] = JSON.parse(localStorage.getItem('user'));
+        questions['title'] = $('#test_title').html();
+        quiz_post(questions);
+        return "done"
+    }
+    function quiz_post(data) {
+        var csrf_token = $('input[name=csrf_token]').val();
+        $.ajax({
+            type: 'POST',
+            url: '/quiz/savequiz',
+            data: JSON.stringify(data),
+            contentType: false,
+            cache: false,
+            processData: false,
+            async: false,
+            success: function (data) {
+                console.log('Success!');
+            },
+
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+                    xhr.setRequestHeader('X-CSRFToken', csrf_token)
+                }
+            }
+        })
+    }
+</script>

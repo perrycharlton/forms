@@ -1,21 +1,22 @@
 {% extends "base.html" %}
 <!-- this is to add a layer of style/themes to the site -->
+
 {% block toptheme %}
-    <div class="container my-transparency">
-
-        {% block top %}
-            <h1 class="text-center">Welcome to my site</h1>
-
-        {% endblock top %}
+    <div id="main_header" class="container my-transparency">
+        <div id="top_menu">
+            {% if menu %}
+            {% include menu %}
+            {% endif %}
+        </div>
     </div>
-{% endblock toptheme %}
+{% endblock %}
 {% block contenttheme %}
     <div class="container  my-transparency">
-    <div id="content">
-        {% block content %}
-            <button id="login_btn" data-link="login" class="btn btn-primary">Login</button>
-            <button id="signup_btn" data-link="signup" class="btn btn-info">sign up</button>
-            {% include 'welcome.html' %}
-        {% endblock content %}
-    </div></div>
-{% endblock contenttheme %}
+        <div id="content">
+            {% if data %}
+                {% set data=data %}
+                {% include sub_content %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

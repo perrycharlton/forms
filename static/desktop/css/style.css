@@ -1,0 +1,70 @@
+
+body{
+  background-color: transparent
+}
+
+html {
+
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+}
+.menu-transparency, .my-transparency{
+background-color: rgba(47, 47, 52, 0.93);
+border-radius: 6px;
+
+}
+.menu-transparency {
+   margin-top: 15px;
+}
+
+.my-transparency{
+  padding: 20px 20px;
+  color: #ffffff;
+}
+#main_header {
+    margin-bottom: 20px !important;
+}
+
+form input{
+    margin-right: 20px !important;
+}
+.error {
+    color: #ff2a2a;
+}
+
+.odd {
+    background-color: rgba(114, 164, 255, 0.13);
+}
+
+.even {
+    background-color: rgba(255, 134, 95, 0.2);
+}
+.odd, .even {
+    padding: 10px 0;
+}
+.side_menu a:hover {
+    background-color: rgba(142,255,84,0.2);
+}
+.quiz_input {
+   margin: 0 10px;
+}
+.quiz_quest{
+    margin: 20px 0 5px 0;
+}
+.form-check-label.radio{
+    text-transform: capitalize;
+}
+.cap_text {
+    text-transform: capitalize;
+}
+.img-option{
+    height: 60px;
+    width: 60px;
+}
+.quiz-edit-input{
+    background-color: transparent;
+    border: none !important;
+    color: white;
+}

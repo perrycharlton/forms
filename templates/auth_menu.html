@@ -1,0 +1,51 @@
+<div class="row">
+    <div id="home" data-link="auth/home" class="col-1">
+        <i class="fa fa-home fa-3x" aria-hidden="true"></i>
+    </div>
+    <div class="col-2"></div>
+    <div class="col-4">
+        <h1 class="text-center">Welcome {{ user | capitalize }}</h1>
+    </div>
+    {% if admin == True %}
+        <div class="col-1">
+            <button id="user_home" data-link="user/home" class="btn btn-primary align-content-end">Users</button>
+        </div>
+        <div class="col-1">
+            <button id="admin" data-link="admin/home" class="btn btn-primary align-content-end">Admin</button>
+        </div>
+    {% else %}
+        <div class="col-1"></div>
+        <div class="col-1"></div>
+    {% endif %}
+    <div class="col-1">
+        <button id="quiz_btn" data-link="quiz/home" class="btn btn-primary align-content-end">Quiz</button>
+    </div>
+    <div class="col-1">
+        <button id="logout_btn" data-link="logout" class="btn btn-primary align-content-end">Logout</button>
+    </div>
+
+
+    <div class="col-1"></div>
+</div>
+<script>
+    jQuery(document).ready(function ($) {
+        $('#main_header button, #home').click(function (e) {
+            var link = $(this).data('link');
+            main.get_data(link).done(function (result) {
+                if(result.content){
+                    $('#content').html(result.content)
+                }
+                if (result.sub_content) {
+                    $('#sub_content').html(result.sub_content);
+                }
+
+                if (result.side_menu) {
+                    $('#side_menu').html(result.side_menu);
+                }
+                if (result.menu) {
+                    $('#top_menu').html(result.menu);
+                }
+            })
+        });
+    });
+</script>

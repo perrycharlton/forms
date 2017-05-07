@@ -1,32 +1,59 @@
 {% from "form_helper.html" import forms %}
 
-<div class="container">
-    <h1>Password Verification</h1>
-    <form id="myForm" method="POST" action="login">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        {{ forms('username','text') }}
-        {{ forms('password','password') }}
-         <div class="flex-row">
-                <label><input type="submit" value="Submit"></label>
-            </div>
-    </form>
-</div>
 
-<link rel="stylesheet" href="{{ url_for('user.static', filename='css/signin.css') }}">
+<h1>Password Verification</h1>
+<form id="myForm" method="post" action="admin/login" class="form-group">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    {{ forms('username','text') }}
+    {{ forms('password','password') }}
 
-<script type="text/javascript">
+    <button id="login" type="submit" class="btn btn-danger">Submit</button>
 
-  document.addEventListener('DOMContentLoaded', function () {
+</form>
+<div id="comment" class="comment"></div>
+<script>
 
-      // JavaScript form validation
-      console.log('here is begins');
-
-      var checkPassword = function (str) {
-          var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
-          return re.test(str)
-      };
+    $().ready(function ($) {
+        console.log('tesl');
+        var csrf = $("input[name='csrf_token']").val(),
+            username = $('#id_username');
 
 
-      re = /^\w+$/;
-  }
+        $("#login").click(function (e) {
+            var form = $("#myForm");
+            e.preventDefault();
+            if (form.valid()) {
+                var data = form.serialize();
+                main.post_data("auth/login", data).done(function (result) {
+                    if (result.content) {
+                        $('#content').html(result.content);
+                    }
+                    if (result.message) {
+                        $('#signup_message').html(result.message)
+                    }
+                    if (result.menu) {
+                        $('#top_menu').html(result.menu)
+                    }
+
+                });
+            }
+
+            return form.valid();
+        });
+
+        $("#myForm").validate({
+            rules: {
+                username: {
+                    required: true,
+                    minlength: 6
+                }
+            },
+            messages: {
+                username: {
+                    required: "Enter your username",
+                    minlength: "At least 2 characters are necessary"
+                }
+            }
+        });
+    });
 </script>

@@ -1,11 +1,37 @@
-    <div class="my-transparency">
-        <h1 class="text-center">Transition 2 Further Education</h1>
-        <h4 class="text-center">
-            “Supporting the smooth transition of High Needs Students into Further Education”
-        </h4>
-    <br>
-        <h3 class="text-center">Introduction</h3>
+{% extends "base.html" %}
+<!-- this is to add a layer of style/themes to the site -->
+{% block toptheme %}
+    <div id="main_header" class="container my-transparency">
 
+        {% block top %}
+            <div class="row toprow">
+                <div id="home" data-link="home" class="col-3"><i class="fa fa-home fa-3x" aria-hidden="true"></i></div>
+                <div class="col-6"><h1 class="text-center">Welcome to my site</h1></div>
+                <div class="col-1">
+                    <button id="login_btn" data-link="login" class="btn btn-primary align-content-end">Login</button>
+                </div>
+                <div class="col-1">
+                    <button id="signup_btn" data-link="signup" class="btn btn-info">sign up</button>
+                </div>
+                <div class="col-1"></div>
+            </div>
+        {% endblock top %}
     </div>
+{% endblock toptheme %}
+
+
+
+{% block contenttheme %}
+    <div class="container  my-transparency">
+
+        <div id="content">
+            {% block content %}
+                {% with b_data = data.b_data %}
+                    {% include welcome.html %}
+                {% endwith %}
+            {% endblock content %}
+        </div>
+    </div>
+{% endblock contenttheme %}
 
 

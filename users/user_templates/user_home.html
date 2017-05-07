@@ -1,0 +1,22 @@
+<div class="row" >
+     {% if side_menu %}
+        <div class="col-2" id="side_menu">{%  include side_menu %}</div>
+        <div class="col-10" id="sub_content" >{% set menus = menus %}{% include sub_content %}</div>
+    {% else %}
+         <div class="col-2" id="side_menu"></div>
+        <div class="col-10" id="sub_content"></div>
+    {% endif %}
+    </div>
+{#<script>#}
+{#    jQuery(document).ready(function ($) {#}
+{#        $('#main_header button, #home').click(function (e) {#}
+{#            var link = $(this).data('link');#}
+{#            main.get_data(link + '.html').done(function (result) {#}
+{#                console.log(result);#}
+{#                history.replaceState({link: link}, 'page 2', link);#}
+{#                $('#content').html(result.page);#}
+{##}
+{#            })#}
+{#        });#}
+{#    });#}
+{#</script>#}

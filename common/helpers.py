@@ -1,6 +1,8 @@
-import os
+
 from datetime import datetime, timedelta
 from flask.json import JSONEncoder as BaseJSONEncoder
+from pkgutil import simplegeneric
+import random, string
 
 
 def get_current_time():
@@ -17,6 +19,14 @@ def get_current_time_plus(days=0, hours=0, minutes=0, seconds=0):
 #             os.mkdir(dir_path)
 #     except Exception, e:
 #         raise e
+
+
+def randomword(length):
+    return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
+
+
+def true_false(condition):
+    return "true" if condition else 'false'
 
 
 class JSONEncoder(BaseJSONEncoder):
@@ -68,3 +78,27 @@ class JsonSerializer(object):
         for key in hidden:
             rv.pop(key, None)
         return rv
+
+
+@simplegeneric
+def get_items(obj):
+    while False:  # no items, a scalar object
+        yield None
+
+
+@get_items.register(dict)
+def _(obj):
+    return obj.items()  # json object
+
+
+@get_items.register(list)
+def _(obj):
+    return enumerate(obj)  # json array
+
+
+def strip_whitespace(json_data):
+    for key, value in get_items(json_data):
+        if hasattr(value, 'strip'):  # json string
+            json_data[key] = (value.strip()).strip('\n')
+        else:
+            strip_whitespace(value)  # recursive call
